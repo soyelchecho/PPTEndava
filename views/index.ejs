@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head lang="es">
+	<title> PPT Endava</title>
+	<link rel="stylesheet" type="text/css" href="css/style.css">
+</head>
+
+<body>
+	
+	<header>
+		<div class="titleHeader">
+				<h1 class="titlePPT">
+					PIEDRA - PAPEL O TIJERA ENDAVA
+				</h1>
+		</div>	
+	</header>
+
+	<div class="container">
+		<div class="firstContainer">
+			<div class="scoreTitle">
+				<h2>Score</h2>
+			</div>
+			<div class="socreElements">
+				<div class="userScore">
+					<div class="usertitle">
+						<p>User</p>
+					</div>
+					<div class="userS">
+						<p>0</p>
+					</div>
+				</div>
+				<div class="pcScore">
+					<div class="pctitle">
+						<p>PC</p>
+					</div>
+					<div class="pcSc">
+						<p>0</p>
+					</div>
+				</div>
+			</div>
+			<div class="partidaStatus">
+				<div class="partida">
+					<p>User Saco: # y pc Saco:# </p>
+				</div>
+				<div class="ganador">
+					<p>Quien Gano?</p>
+				</div>
+			</div>
+			<div class="opcionesElegir">
+				<div class="piedra" id="piedra">
+					<p>PIEDRA</p>
+				</div>
+				<div class="papel" id='papel'>
+					<p>PAPEL</p>
+				</div>
+				<div class="tijera" id='tijera'>
+					<p>TIJERA</p>
+				</div>
+			</div>
+			<div class="turno" >
+				<p id='turno'>Turno actual</p>
+			</div>
+		</div>
+		
+	</div>
+
+	<script type="text/javascript">
+		var miturno = true;
+		var turno =  document.getElementById('turno').innerHTML = 'TURNO ACTUAL DEL JUGADOR'
+	</script>
+
+	<script type="text/javascript">
+		document.getElementById("piedra").addEventListener('click', function (event) {
+				if(miturno == true){
+				console.log(miturno)
+				miturno = false;
+				}	
+        	});
+	</script>
+
+	<script type="text/javascript">
+		document.getElementById("papel").addEventListener('click', function (event) {
+			console.log(miturno)
+        });
+	</script>
+
+	<script type="text/javascript">
+		document.getElementById("tijera").addEventListener('click', function (event) {
+			console.log('Piedra')
+        });
+	</script>
+
+
+	<footer>
+		<h2>Footer</h2>
+	</footer>
+</body>
+</html>

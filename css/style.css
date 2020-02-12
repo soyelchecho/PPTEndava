@@ -1,0 +1,165 @@
+header{
+	background: #DADADA;
+}
+.titleHeader{
+	margin: auto;
+	width: 50%;
+	padding: 10px;
+}
+.titlePPT{
+	color: #4A4A4A;
+	text-align: center;
+}
+.container{
+	background: #4A4A4A;
+}
+.firstContainer{
+	padding: 10px;
+}
+.scoreTitle{
+	margin: auto;
+	width: 50%;
+}
+.scoreTitle h2{
+	color: #DADADA;
+	text-align: center;
+}
+.socreElements{
+	margin: auto;
+	width: 70%;
+	padding: 2px;
+	display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+     align-items: center;
+}
+.userScore{
+	margin: auto;
+	background:  #7e2e26 ;
+	-webkit-box-shadow: 7px 7px 5px 0px rgba(50, 50, 50, 0.75);
+	-moz-box-shadow:    7px 7px 5px 0px rgba(50, 50, 50, 0.75);
+	box-shadow:         7px 7px 5px 0px rgba(50, 50, 50, 0.75);
+	width: 35%;
+	height: 150px;
+	align-items: center;
+}
+.userScore p{
+	text-align: center;
+	margin: auto;
+	margin-top: 20%;
+	font-size: 20px;
+}
+.usertitle{
+	margin-top: 10%;
+	color: #DADADA; 
+}
+.userS{
+	margin: auto;
+	width: 20%;
+	margin-top: 5%;
+}
+
+
+.userScore p{
+	margin:auto;
+	width: 35%;
+	color: #DADADA;
+}
+
+.pcScore{
+	margin: auto;
+	width: 35%;
+	height: 150px;
+	align-items: center;
+	background:  #7e2e26 ;
+	-webkit-box-shadow: 7px 7px 5px 0px rgba(50, 50, 50, 0.75);
+	-moz-box-shadow:    7px 7px 5px 0px rgba(50, 50, 50, 0.75);
+	box-shadow:         7px 7px 5px 0px rgba(50, 50, 50, 0.75);
+}
+.pcScore p{
+	text-align: center;
+	margin: auto;
+	margin-top: 20%;
+	color: #DADADA;
+	font-size: 20px;
+}
+.pctitle{
+	margin-top: 10%;
+	color: #DADADA;
+}
+.pcSc{
+	margin: auto;
+	width: 20%;
+	margin-top: 5%;
+}
+.pcScore{
+	margin:auto;
+	width: 35%;
+}
+.pcScore p{
+	margin:auto;
+	width: 35%;
+	color: #DADADA;
+}
+
+.partidaStatus{
+	display: flex;
+	color: #DADADA;
+	margin: auto;
+	width: 20%;
+	align-items: center;
+	justify-content: center;
+}
+.partida{
+	margin: auto;
+}
+.ganador{
+	margin: auto;
+}
+.opcionesElegir{
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 60%;
+	margin: auto;
+}
+.piedra{
+	border: 1px solid green;
+	width: 10%;
+	background: white;
+	margin: auto;
+}
+.piedra p{
+	text-align: center;
+
+}
+.papel{
+	border: 1px solid green;
+	width: 10%;
+	background: white;
+	margin: auto;
+}
+.papel p{
+	text-align: center;
+}
+.tijera{
+	border: 1px solid green;
+	width: 10%;
+	margin: auto;
+	background: white;
+}
+.tijera p{
+	text-align: center;
+}
+.turno{
+	margin: auto;
+	width: 70%;
+	text-align: center;
+}
+footer{
+	background: #DADADA;
+	padding: 10px;
+	text-align: center;
+}
