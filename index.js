@@ -1,6 +1,6 @@
 const express = require('express');
 const io = require('socket.io');
-const http = require('http')
+const http = require('http');
 
 const app = express()
 const server = http.createServer(app);
@@ -32,37 +32,86 @@ app.get('/',function(req,res){
 	res.render('index.ejs');
 });
 
-var mensajes = [{
+var players = [];
+var playersJoin = 0; 
+var jugadas=[];
+var turnos=0;
+var puntaje=[{usuario1:0,usuario2:0}];
 
-    author: "Carlos",
 
-    text: "Hola! que tal?"
 
-},{
 
-    author: "Pepe",
+function jugar(socket){
+	jugadas = [];
+	turnos = 0;
+	console.log("TURNO JUGADOR: " + turnos);
+	playersJoin++;
+	if(playersJoin <= 2){
+		sockets.to(socket.id).emit('assingUser',playersJoin);
+		sockets.to(socket.id).emit('assingSocketId',socket.id);
+		var map = new Object(); 
+		map[playersJoin] = socket.id;
+		players.push(map);
+		console.log(players);
+	}
+	sockets.emit('imprimirID');
+	sockets.emit('puntaje',puntaje);
+	sockets.emit('mostrarUsuarios',players);
+	if(playersJoin > 1){
+		sockets.to(players[0][1]).emit('permitirTurno');
+		sockets.emit('turnoActual',1);
+	}
 
-    text: "Muy bien! y tu??"
-
-},{
-
-    author: "Paco",
-
-    text: "Genial!"
-
-}];
-
+	socket.on('terminoTurno', function(data){
+		jugadas.push(data);
+		turnos++;
+		console.log(turnos);
+		sockets.to(data.idsocket).emit('denegarTurno');
+		if(turnos <2){
+			console.log(players[1][2]);
+			sockets.to(players[1][2]).emit('permitirTurno');
+			sockets.emit('turnoActual',2);
+		}else{
+			console.log(jugadas);
+			var decicion1 = jugadas[0].eleccion;
+			var decicion2 = jugadas[1].eleccion;
+			if(decicion1 == "piedra" && decicion2 == "tijera"){
+				puntaje[0].usuario1 = puntaje[0].usuario1+ 1;
+				sockets.emit('ganador',"User1");
+			}else if(decicion1 == "piedra" && decicion2 == "papel"){
+				puntaje[0].usuario2 = puntaje[0].usuario2+1;
+				sockets.emit('ganador',"User2");
+			}else if(decicion1 == "piedra" &&  decicion2 == "piedra"){
+				sockets.emit('ganador',"EMPATE");
+			}else if(decicion1 == "papel" && decicion2=="piedra"){
+				puntaje[0].usuario1 = puntaje[0].usuario1 + 1;
+				sockets.emit('ganador',"User1");
+			}else if(decicion1 == "papel" && decicion2 == "tijera"){
+				puntaje[0].usuario2 = puntaje[0].usuario2 + 1;
+				sockets.emit('ganador',"User2");
+			}else if(decicion1 == "papel" && decicion2=="papel"){
+				sockets.emit('ganador',"EMPATE");
+			}else if(decicion1=="tijera" && decicion2== "papel"){
+				puntaje[0].usuario1 = puntaje[0].usuario1 + 1;
+				sockets.emit('ganador',"User1");
+			}else if(decicion1=="tijera" && decicion2== "piedra"){
+				puntaje[0].usuario1 = puntaje[0].usuario1 + 1;
+				sockets.emit('ganador',"User2");
+			}else if(decicion1=="tijera" && decicion2 == "tijera"){
+				sockets.emit('ganador',"EMPATE");
+			}else{
+				console.log('SI LLEGASTE HASTA ESTE PUNTO NO SE QUE HIJUEPUCHAS PASO');
+			}
+			sockets.emit('estadoPartida',("User1 Saco: " + jugadas[0].eleccion + " y User2 Saco: " + jugadas[1].eleccion));
+			sockets.emit('puntaje',puntaje);
+			jugar(socket);
+		}
+	});
+}
 
 sockets.on('connection',function(socket){
-	console.log('Un cliente se ha conectado');
-	socket.emit('messages', mensajes);
-	socket.on('new-message', function(data) {
-
-	    messages.push(data);
-
-	    sockets.sockets.emit('messages', messages);
-
-	});
+	console.log('Un cliente se ha conectado: ' + socket.id);
+	jugar(socket);
 });
 
 

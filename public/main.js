@@ -1,49 +1,60 @@
 var socket = io();
+var playerId = 0;
+var socketId = 0;
+var turno = false;
 
-socket.on('messages', function(data) {
 
-    console.log(data);
-
+socket.on('assingUser',function(data){
+  console.log('Se asigno el numero: '  + data);
+  playerId = data;
 });
 
-function render(data) {
-
-    var html = data.map(function(elem, index){
-
-        return(`<div>
-
-                 <strong>${elem.author}</strong>:
-
-                 <em>${elem.text}</em>
-
-        </div>`)
-
-    }).join(" ");
-
-
-
-    document.getElementById('messages').innerHTML = html;
-
-}
-
-socket.on('messages', function(data) {
-
-    render(data);
-
+socket.on('assingSocketId',function(data){
+  console.log('Se asigno el numero: '  + data);
+  socketId = data;
 });
 
-function addMessage(e) {
+socket.on('imprimirID',function(){
+  console.log(playerId);
+});
 
-    var mensaje = {
+socket.on('playerJoin',function(data){
+  console.log(data);
+  renderUserJoined(data);
+});
 
-    author: document.getElementById('username').value,
+socket.on('turnoActual',function(data){
+  document.getElementById('turno').innerHTML = '<p> El Usuario: </p> <b>'+ data + ' </b> <p> esta eligiendo </p>';
+});
 
-    text: document.getElementById('texto').value
 
-  };
+socket.on('mostrarUsuarios',function(data){
+  console.log(data);
+  // + data[i][(i+1).toString()]
+  let keys = Array.from( data.keys() );
+  for (var i = 0; i < data.length; i++) {
+    document.getElementById('user' + (i+1)).innerHTML = '<p> Usuario'  + i  + '</p>';
+  }
+});
 
-  socket.emit('new-message', mensaje);
+socket.on('puntaje',function(data){
+  document.getElementById('userS').innerHTML = '<p>' + data[0].usuario1 +'</p>';
+  document.getElementById('pcSc').innerHTML = '<p>' + data[0].usuario2 +'</p>';
+});
 
-  return false;
 
-}
+socket.on('estadoPartida',function(data){
+  document.getElementById('partida').innerHTML = data;
+});
+
+socket.on('permitirTurno',function(){
+  turno = true;
+});
+
+socket.on('denegarTurno',function(){
+  turno = false;
+});
+
+socket.on('ganador',function(data){
+  document.getElementById('ganador').innerHTML = "<p> Ganador: " +data + "</p>";
+});
