@@ -8,7 +8,7 @@ var configuracion = {
     ruta: rutaLocal,
     app: {
       name: 'PPTEndava'
-    },,
+    },
     puerto: process.env.PORT || 3000
   },
   produccion: {
