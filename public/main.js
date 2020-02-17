@@ -2,10 +2,12 @@ var socket = io();
 var playerId = 0;
 var socketId = 0;
 var turno = false;
+var vez = 0;
 
 
 socket.on('assingUser',function(data){
   console.log('Se asigno el numero: '  + data);
+  document.getElementById('scoreTitle').innerHTML = "<h2> " + data + "</h2>";
   playerId = data;
 });
 
@@ -15,12 +17,7 @@ socket.on('assingSocketId',function(data){
 });
 
 socket.on('imprimirID',function(){
-  console.log(playerId);
-});
-
-socket.on('playerJoin',function(data){
-  console.log(data);
-  renderUserJoined(data);
+  console.log('Id:' + socketId);
 });
 
 socket.on('turnoActual',function(data){
@@ -29,7 +26,6 @@ socket.on('turnoActual',function(data){
 
 
 socket.on('mostrarUsuarios',function(data){
-  console.log(data);
   // + data[i][(i+1).toString()]
   let keys = Array.from( data.keys() );
   for (var i = 0; i < data.length; i++) {
@@ -48,11 +44,35 @@ socket.on('estadoPartida',function(data){
 });
 
 socket.on('permitirTurno',function(){
+  console.log("MIRA TRIPLE GONORREA ESTAS ENTRANDO AQUI POR " + vez);
+  vez ++;
   turno = true;
+
+  document.getElementById("piedra").addEventListener('click', function (event) {
+      if(turno == true){
+        socket.emit('terminoTurno',{idsocket:socketId,eleccion:"piedra",usuario:playerId});
+        turno = false;
+      }
+  });
+  document.getElementById("papel").addEventListener('click', function (event) {
+    if(turno == true){
+      socket.emit('terminoTurno',{idsocket:socketId,eleccion:"papel",usuario:playerId});
+      turno = false;
+    }
+  });
+  document.getElementById("tijera").addEventListener('click', function (event) {
+    if(turno == true){
+      socket.emit('terminoTurno',{idsocket:socketId,eleccion:"tijera",usuario:playerId});
+      turno = false;
+    }
+  });
 });
 
 socket.on('denegarTurno',function(){
   turno = false;
+  document.getElementById("piedra").removeEventListener('click',function(){console.log("SE QUITO PIEDRA")});
+  document.getElementById("papel").removeEventListener('click',function(){console.log("SE QUITO PAPEL")});
+  document.getElementById("tijera").removeEventListener('click',function(){console.log("SE QUITO TIJERA")});
 });
 
 socket.on('ganador',function(data){

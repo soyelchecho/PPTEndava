@@ -7,6 +7,7 @@ const server = http.createServer(app);
 
 var configuracion = require('./config/configuraciones');
 app.set('port', configuracion.puerto);
+
 var sockets = io.listen(server);
 
 
@@ -35,44 +36,31 @@ app.get('/',function(req,res){
 var players = [];
 var playersJoin = 0; 
 var jugadas=[];
-var turnos=0;
+var turnos=1;
 var puntaje=[{usuario1:0,usuario2:0}];
-
 
 
 
 function jugar(socket){
 	jugadas = [];
-	turnos = 0;
-	console.log("TURNO JUGADOR: " + turnos);
-	playersJoin++;
-	if(playersJoin <= 2){
-		sockets.to(socket.id).emit('assingUser',playersJoin);
-		sockets.to(socket.id).emit('assingSocketId',socket.id);
-		var map = new Object(); 
-		map[playersJoin] = socket.id;
-		players.push(map);
-		console.log(players);
-	}
+	//aqui iba el if de asignacion
 	sockets.emit('imprimirID');
 	sockets.emit('puntaje',puntaje);
 	sockets.emit('mostrarUsuarios',players);
-	if(playersJoin > 1){
+	if(playersJoin > 1 && turnos == 1){
+		console.log("Entra aqui");
 		sockets.to(players[0][1]).emit('permitirTurno');
 		sockets.emit('turnoActual',1);
 	}
-
-	socket.on('terminoTurno', function(data){
+	sockets.on('terminoTurno', function(data){
+		console.log("El jugador: " + data.idsocket + " ha elegido: " + data.eleccion);
 		jugadas.push(data);
 		turnos++;
-		console.log(turnos);
 		sockets.to(data.idsocket).emit('denegarTurno');
-		if(turnos <2){
-			console.log(players[1][2]);
+		if(turnos % 2 == 0 && turnos != 0){
 			sockets.to(players[1][2]).emit('permitirTurno');
 			sockets.emit('turnoActual',2);
 		}else{
-			console.log(jugadas);
 			var decicion1 = jugadas[0].eleccion;
 			var decicion2 = jugadas[1].eleccion;
 			if(decicion1 == "piedra" && decicion2 == "tijera"){
@@ -95,15 +83,18 @@ function jugar(socket){
 				puntaje[0].usuario1 = puntaje[0].usuario1 + 1;
 				sockets.emit('ganador',"User1");
 			}else if(decicion1=="tijera" && decicion2== "piedra"){
-				puntaje[0].usuario1 = puntaje[0].usuario1 + 1;
+				puntaje[0].usuario2 = puntaje[0].usuario2 + 1;
 				sockets.emit('ganador',"User2");
 			}else if(decicion1=="tijera" && decicion2 == "tijera"){
 				sockets.emit('ganador',"EMPATE");
 			}else{
 				console.log('SI LLEGASTE HASTA ESTE PUNTO NO SE QUE HIJUEPUCHAS PASO');
 			}
+
 			sockets.emit('estadoPartida',("User1 Saco: " + jugadas[0].eleccion + " y User2 Saco: " + jugadas[1].eleccion));
 			sockets.emit('puntaje',puntaje);
+			console.log(jugadas);
+			turnos = 1;
 			jugar(socket);
 		}
 	});
@@ -111,6 +102,17 @@ function jugar(socket){
 
 sockets.on('connection',function(socket){
 	console.log('Un cliente se ha conectado: ' + socket.id);
+	playersJoin++;
+	if(playersJoin <= 2){
+		console.log("Van " + playersJoin + " Jugadores");
+		sockets.to(socket.id).emit('assingUser',playersJoin);
+		console.log("asigne el usuario al socket " + socket.id);
+		sockets.to(socket.id).emit('assingSocketId',socket.id);
+		var map = new Object(); 
+		map[playersJoin] = socket.id;
+		players.push(map);
+		console.log(players);
+	}
 	jugar(socket);
 });
 
